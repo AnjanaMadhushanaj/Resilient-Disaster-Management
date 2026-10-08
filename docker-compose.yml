@@ -8,13 +8,15 @@ services:
   dashboard:
     build:
       context: ./dashboard
-      # NEXT_PUBLIC_* variables are inlined during `next build`, so the public API
-      # URL has to reach the image as a build arg rather than a runtime variable.
+      # NEXT_PUBLIC_* variables are inlined during `next build`, so these have to
+      # reach the image as build args rather than runtime environment variables.
       #
-      # PUBLIC_HOST comes from the .env file the pipeline writes on the instance.
-      # Unset locally, so this falls back to localhost for `docker compose up`.
+      # Both come from the .env file the pipeline writes on the instance. They are
+      # unset locally, so this falls back to localhost for `docker compose up` and
+      # the map shows its "token not set" panel.
       args:
         NEXT_PUBLIC_API_URL: http://${PUBLIC_HOST:-localhost}:3000
+        NEXT_PUBLIC_MAPBOX_TOKEN: ${MAPBOX_TOKEN:-}
     restart: always
     ports:
       # 80 serves the plain http://<host> URL; 3001 keeps the previous demo URL working.

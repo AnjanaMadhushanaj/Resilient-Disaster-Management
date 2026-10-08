@@ -35,10 +35,13 @@ jobs:
             set -e
             cd /home/ubuntu/app
 
-            # docker-compose.yml substitutes ${PUBLIC_HOST} here. It becomes the
-            # dashboard's NEXT_PUBLIC_API_URL build arg, so the browser reaches the
-            # API on this instance rather than on the visitor's own machine.
-            echo "PUBLIC_HOST=${{ secrets.EC2_HOST }}" > .env
+            # docker-compose.yml substitutes both of these into the dashboard's
+            # build args. PUBLIC_HOST becomes NEXT_PUBLIC_API_URL, so the browser
+            # reaches the API on this instance rather than on the visitor's machine.
+            {
+              echo "PUBLIC_HOST=${{ secrets.EC2_HOST }}"
+              echo "MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }}"
+            } > .env
 
             # user_data installs Docker on first boot; block until it is available.
             for i in $(seq 1 30); do

@@ -4,15 +4,15 @@
   padding: 0;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 .screen {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  padding: 2rem;
-  text-align: center;
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
@@ -38,42 +38,118 @@
   }
 }
 
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.5rem 1rem 1.25rem;
+  text-align: center;
+}
+
 .label {
-  font-size: 1rem;
+  font-size: 0.85rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   opacity: 0.85;
 }
 
 .headline {
-  font-size: clamp(2.5rem, 11vw, 8rem);
-  line-height: 1;
+  font-size: clamp(1.75rem, 5vw, 3.75rem);
+  line-height: 1.05;
   font-weight: 800;
   letter-spacing: 0.02em;
 }
 
 .status {
-  font-size: clamp(1.1rem, 2.5vw, 1.75rem);
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
   font-weight: 600;
 }
 
 .level {
-  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
   opacity: 0.9;
 }
 
 .ussd {
-  margin-top: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  margin-top: 0.4rem;
+  padding: 0.6rem 1.1rem;
   border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
 .stamp {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   opacity: 0.7;
+}
+
+.map-panel {
+  flex: 1;
+  display: flex;
+  min-height: 320px;
+  margin: 0 1.5rem 1.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.55);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: #0b0f14;
+}
+
+.map {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 320px;
+}
+
+.map--notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  background-color: #14181f;
+  color: #c7ced8;
+  font-size: 0.95rem;
+}
+
+.map__title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.map__hint {
+  opacity: 0.75;
+  max-width: 32ch;
+}
+
+/* Monitored-site marker */
+.site-marker {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #2ecc71;
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.4);
+}
+
+.site-marker--flood {
+  background-color: #ff1f2e;
+  animation: marker-blink 0.8s steps(1, end) infinite;
+}
+
+@keyframes marker-blink {
+  0%,
+  100% {
+    background-color: #ff1f2e;
+    opacity: 1;
+  }
+  50% {
+    background-color: #7f0d16;
+    opacity: 0.25;
+  }
 }
 
 /* Flashing content is a hazard for photosensitive viewers; hold the state steady instead. */
@@ -81,5 +157,11 @@
   .flood {
     animation: none;
     background-color: #c40f1c;
+  }
+
+  .site-marker--flood {
+    animation: none;
+    background-color: #ff1f2e;
+    opacity: 1;
   }
 }

@@ -1,6 +1,13 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+
+// mapbox-gl touches `window` at import time, so the map is loaded client-side only.
+const MapView = dynamic(() => import('./MapView'), {
+  ssr: false,
+  loading: () => <div className="map map--notice">Loading map...</div>,
+});
 
 const POLL_INTERVAL_MS = 2000;
 
@@ -40,30 +47,36 @@ export default function Dashboard() {
 
   return (
     <main className={isFlood ? 'screen flood' : 'screen normal'}>
-      <p className="label">Resilient Flood Detection System</p>
+      <header className="banner">
+        <p className="label">Resilient Flood Detection System</p>
 
-      <h1 className="headline">{isFlood ? 'FLOOD EMERGENCY' : 'SAFE'}</h1>
+        <h1 className="headline">{isFlood ? 'FLOOD EMERGENCY' : 'SAFE'}</h1>
 
-      <p className="status">
-        Status: {reading?.status ?? 'Waiting for edge telemetry...'}
-      </p>
+        <p className="status">
+          Status: {reading?.status ?? 'Waiting for edge telemetry...'}
+        </p>
 
-      <p className="level">
-        Water Level:{' '}
-        {reading?.waterLevel !== undefined && reading?.waterLevel !== null
-          ? `${reading.waterLevel} cm`
-          : '--'}
-      </p>
+        <p className="level">
+          Water Level:{' '}
+          {reading?.waterLevel !== undefined && reading?.waterLevel !== null
+            ? `${reading.waterLevel} cm`
+            : '--'}
+        </p>
 
-      {isFlood && (
-        <p className="ussd">[USSD GATEWAY] Emergency alert dispatched to *119#</p>
-      )}
+        {isFlood && (
+          <p className="ussd">[USSD GATEWAY] Emergency alert dispatched to *119#</p>
+        )}
 
-      <p className="stamp">
-        {reading?.updatedAt
-          ? `Last update: ${new Date(reading.updatedAt).toLocaleTimeString()}`
-          : ''}
-      </p>
+        <p className="stamp">
+          {reading?.updatedAt
+            ? `Last update: ${new Date(reading.updatedAt).toLocaleTimeString()}`
+            : ''}
+        </p>
+      </header>
+
+      <div className="map-panel">
+        <MapView isFlood={isFlood} />
+      </div>
     </main>
   );
 }
