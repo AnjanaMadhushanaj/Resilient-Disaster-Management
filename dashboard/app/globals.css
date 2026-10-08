@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* Safe state */
+.normal {
+  background-color: #0b6b3a;
+  color: #eafff2;
+}
+
+/* Emergency state: full-screen hard blink between dark and bright red */
+.flood {
+  color: #ffffff;
+  animation: blink 0.8s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    background-color: #7f0d16;
+  }
+  50% {
+    background-color: #ff1f2e;
+  }
+}
+
+.label {
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.headline {
+  font-size: clamp(2.5rem, 11vw, 8rem);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.status {
+  font-size: clamp(1.1rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+}
+
+.level {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  opacity: 0.9;
+}
+
+.ussd {
+  margin-top: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.stamp {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* Flashing content is a hazard for photosensitive viewers; hold the state steady instead. */
+@media (prefers-reduced-motion: reduce) {
+  .flood {
+    animation: none;
+    background-color: #c40f1c;
+  }
+}
