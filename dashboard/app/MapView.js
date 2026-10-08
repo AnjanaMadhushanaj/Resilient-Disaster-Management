@@ -69,7 +69,7 @@ export default function MapView({ isFlood }) {
   if (!token) {
     return (
       <div className="map map--notice">
-        <p className="map__title">Map unavailable</p>
+        <p className="map__title">MAP LINK UNAVAILABLE</p>
         <p className="map__hint">
           Set NEXT_PUBLIC_MAPBOX_TOKEN to render the satellite view.
         </p>
@@ -77,5 +77,25 @@ export default function MapView({ isFlood }) {
     );
   }
 
-  return <div ref={containerRef} className="map" />;
+  return (
+    <div className="map-stage">
+      <div ref={containerRef} className="map" />
+
+      {/* Surge radius. A decorative DOM overlay centred on the map, not a
+          geographic buffer — it does not scale with zoom or cover real area. */}
+      <div
+        className={isFlood ? 'surge surge--active' : 'surge'}
+        aria-hidden="true"
+      >
+        <span className="surge__ring" />
+        <span className="surge__ring" />
+        <span className="surge__ring" />
+        <span className="surge__core" />
+      </div>
+
+      <p className={isFlood ? 'surge__label surge__label--active' : 'surge__label'}>
+        SURGE RADIUS
+      </p>
+    </div>
+  );
 }
