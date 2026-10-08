@@ -1,0 +1,5 @@
+# This project deploys to Linux: Docker containers plus an Ubuntu EC2 host.
+# core.autocrlf=true on Windows would rewrite these files as CRLF on checkout,
+# and a CRLF terraform/user_data.sh fails on EC2 with "/bin/bash^M: bad
+# interpreter". Force LF for every text file so the target sees what we wrote.
+* text=auto eol=lf
