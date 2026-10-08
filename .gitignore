@@ -1,0 +1,14 @@
+# Terraform state can contain secrets and must never be committed.
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+
+# Local variable overrides. The lock file is intentionally NOT ignored — Terraform
+# recommends committing .terraform.lock.hcl so provider versions stay pinned.
+*.tfvars
+.env
+
+node_modules/
+.next/
+__pycache__/

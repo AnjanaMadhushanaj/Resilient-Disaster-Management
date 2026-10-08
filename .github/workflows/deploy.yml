@@ -1,0 +1,58 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # allows a manual re-run, useful for the very first deploy
+
+jobs:
+  deploy:
+    name: Build and deploy containers
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Copy project files to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "docker-compose.yml,api/,dashboard/,edge/"
+          target: "/home/ubuntu/app"
+          # Clear the target first so removed files do not linger between deploys.
+          rm: true
+
+      - name: Start containers over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            cd /home/ubuntu/app
+
+            # docker-compose.yml substitutes ${PUBLIC_HOST} here. It becomes the
+            # dashboard's NEXT_PUBLIC_API_URL build arg, so the browser reaches the
+            # API on this instance rather than on the visitor's own machine.
+            echo "PUBLIC_HOST=${{ secrets.EC2_HOST }}" > .env
+
+            # user_data installs Docker on first boot; block until it is available.
+            for i in $(seq 1 30); do
+              if docker info >/dev/null 2>&1; then
+                break
+              fi
+              echo "Waiting for the Docker daemon..."
+              sleep 10
+            done
+
+            docker compose up -d --build
+
+            # Reclaimed so repeated deploys do not exhaust the root volume.
+            docker image prune -f
+
+            echo "--- Running containers ---"
+            docker compose ps
